@@ -136,8 +136,8 @@ bool write_to_descriptor( DESCRIPTOR_DATA * d, const char *txt, int length );
  * Other local functions (OS-independent).
  */
 bool check_parse_name( const char *name, bool newchar );
-bool check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn );
-bool check_playing( DESCRIPTOR_DATA * d, const char *name, bool kick );
+int check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn );
+int check_playing( DESCRIPTOR_DATA * d, const char *name, bool kick );
 int main( int argc, char **argv );
 void nanny( DESCRIPTOR_DATA * d, char *argument );
 bool flush_buffer( DESCRIPTOR_DATA * d, bool fPrompt );
@@ -182,19 +182,19 @@ void cleanup_memory( void )
    free_morphs(  );
 
    /*
-    * Commands 
+    * Commands
     */
    fprintf( stdout, "%s", "Commands.\n" );
    free_commands(  );
 
    /*
-    * Deities 
+    * Deities
     */
    fprintf( stdout, "%s", "Deities.\n" );
    free_deities(  );
 
    /*
-    * Clans 
+    * Clans
     */
    fprintf( stdout, "%s", "Clans.\n" );
    free_clans(  );
@@ -206,37 +206,37 @@ void cleanup_memory( void )
    free_councils(  );
 
    /*
-    * socials 
+    * socials
     */
    fprintf( stdout, "%s", "Socials.\n" );
    free_socials(  );
 
    /*
-    * Watches 
+    * Watches
     */
    fprintf( stdout, "%s", "Watches.\n" );
    free_watchlist(  );
 
    /*
-    * Helps 
+    * Helps
     */
    fprintf( stdout, "%s", "Helps.\n" );
    free_helps(  );
 
    /*
-    * Languages 
+    * Languages
     */
    fprintf( stdout, "%s", "Languages.\n" );
    free_tongues(  );
 
    /*
-    * Boards 
+    * Boards
     */
    fprintf( stdout, "%s", "Boards.\n" );
    free_boards(  );
 
    /*
-    * Whack supermob 
+    * Whack supermob
     */
    fprintf( stdout, "%s", "Whacking supermob.\n" );
    if( supermob )
@@ -247,7 +247,7 @@ void cleanup_memory( void )
    }
 
    /*
-    * Free Objects 
+    * Free Objects
     */
    clean_obj_queue(  );
    fprintf( stdout, "%s", "Objects.\n" );
@@ -256,7 +256,7 @@ void cleanup_memory( void )
    clean_obj_queue(  );
 
    /*
-    * Free Characters 
+    * Free Characters
     */
    clean_char_queue(  );
    fprintf( stdout, "%s", "Characters.\n" );
@@ -265,7 +265,7 @@ void cleanup_memory( void )
    clean_char_queue(  );
 
    /*
-    * Descriptors 
+    * Descriptors
     */
    fprintf( stdout, "%s", "Descriptors.\n" );
    for( desc = first_descriptor; desc; desc = desc_next )
@@ -276,13 +276,13 @@ void cleanup_memory( void )
    }
 
    /*
-    * Liquids 
+    * Liquids
     */
    fprintf( stdout, "%s", "Liquid Table.\n" );
    free_liquiddata(  );
 
    /*
-    * Races 
+    * Races
     */
    fprintf( stdout, "%s", "Races.\n" );
    for( hash = 0; hash < MAX_RACE; hash++ )
@@ -293,7 +293,7 @@ void cleanup_memory( void )
    }
 
    /*
-    * Classes 
+    * Classes
     */
    fprintf( stdout, "%s", "Classes.\n" );
    for( hash = 0; hash < MAX_CLASS; hash++ )
@@ -303,13 +303,13 @@ void cleanup_memory( void )
    }
 
    /*
-    * Teleport lists 
+    * Teleport lists
     */
    fprintf( stdout, "%s", "Teleport Data.\n" );
    free_teleports(  );
 
    /*
-    * Areas - this includes killing off the hash tables and such 
+    * Areas - this includes killing off the hash tables and such
     */
    fprintf( stdout, "%s", "Area Data Tables.\n" );
    close_all_areas(  );
@@ -321,7 +321,7 @@ void cleanup_memory( void )
    free_all_planes(  );
 
    /*
-    * Get rid of auction pointer  MUST BE AFTER OBJECTS DESTROYED 
+    * Get rid of auction pointer  MUST BE AFTER OBJECTS DESTROYED
     */
    fprintf( stdout, "%s", "Auction.\n" );
    DISPOSE( auction );
@@ -331,7 +331,7 @@ void cleanup_memory( void )
    free_mssp_info();
 
    /*
-    * System Data 
+    * System Data
     */
    fprintf( stdout, "%s", "System data.\n" );
    if( sysdata.time_of_max )
@@ -344,7 +344,7 @@ void cleanup_memory( void )
       STRFREE( sysdata.guild_advisor );
 
    /*
-    * Title table 
+    * Title table
     */
    fprintf( stdout, "%s", "Title table.\n" );
    for( hash = 0; hash < MAX_CLASS; hash++ )
@@ -357,13 +357,13 @@ void cleanup_memory( void )
    }
 
    /*
-    * Skills 
+    * Skills
     */
    fprintf( stdout, "%s", "Skills and Herbs.\n" );
    free_skills(  );
 
    /*
-    * Prog Act lists 
+    * Prog Act lists
     */
    fprintf( stdout, "%s", "Mudprog act lists.\n" );
    free_prog_actlists(  );
@@ -372,7 +372,7 @@ void cleanup_memory( void )
    free_specfuns(  );
 
    /*
-    * Some freaking globals 
+    * Some freaking globals
     */
    fprintf( stdout, "%s", "Globals.\n" );
    DISPOSE( ranged_target_name );
@@ -423,7 +423,7 @@ int main( int argc, char **argv )
    new_boot_time = update_time( localtime( &current_time ) );
    /*
     * Copies *new_boot_time to new_boot_struct, and then points
-    * new_boot_time to new_boot_struct again. -- Alty 
+    * new_boot_time to new_boot_struct again. -- Alty
     */
    new_boot_struct = *new_boot_time;
    new_boot_time = &new_boot_struct;
@@ -435,18 +435,18 @@ int main( int argc, char **argv )
    new_boot_time->tm_hour = 6;
 
    /*
-    * Update new_boot_time (due to day increment) 
+    * Update new_boot_time (due to day increment)
     */
    new_boot_time = update_time( new_boot_time );
    new_boot_struct = *new_boot_time;
    new_boot_time = &new_boot_struct;
    /*
-    * Bug fix submitted by Gabe Yoder 
+    * Bug fix submitted by Gabe Yoder
     */
    new_boot_time_t = mktime( new_boot_time );
    reboot_check( mktime( new_boot_time ) );
    /*
-    * Set reboot time string for do_time 
+    * Set reboot time string for do_time
     */
    get_reboot_string(  );
 
@@ -484,7 +484,7 @@ int main( int argc, char **argv )
 #ifdef WIN32
    {
       /*
-       * Initialise Windows sockets library 
+       * Initialise Windows sockets library
        */
 
       unsigned short wVersionRequested = MAKEWORD( 1, 1 );
@@ -492,7 +492,7 @@ int main( int argc, char **argv )
       int err;
 
       /*
-       * Need to include library: wsock32.lib for Windows Sockets 
+       * Need to include library: wsock32.lib for Windows Sockets
        */
       err = WSAStartup( wVersionRequested, &wsadata );
       if( err )
@@ -502,7 +502,7 @@ int main( int argc, char **argv )
       }
 
       /*
-       * standard termination signals 
+       * standard termination signals
        */
       signal( SIGINT, ( void * )bailout );
       signal( SIGTERM, ( void * )bailout );
@@ -517,7 +517,7 @@ int main( int argc, char **argv )
 
 #ifdef IMC
    /*
-    * Initialize and connect to IMC2 
+    * Initialize and connect to IMC2
     */
    imc_startup( FALSE, imcsocket, fCopyOver );
 #endif
@@ -540,7 +540,7 @@ int main( int argc, char **argv )
 
 #ifdef WIN32
    /*
-    * Shut down Windows sockets 
+    * Shut down Windows sockets
     */
 
    WSACleanup(  );   /* clean up */
@@ -763,13 +763,13 @@ void game_loop( void )
 #endif
 
    /*
-    * signal( SIGSEGV, SegVio ); 
+    * signal( SIGSEGV, SegVio );
     */
    gettimeofday( &last_time, NULL );
    current_time = ( time_t ) last_time.tv_sec;
 
    /*
-    * Main loop 
+    * Main loop
     */
    while( !mud_down )
    {
@@ -829,7 +829,7 @@ void game_loop( void )
             }
 
             /*
-             * check for input from the dns 
+             * check for input from the dns
              */
             if( ( d->connected == CON_PLAYING || d->character != NULL ) && d->ifd != -1 && FD_ISSET( d->ifd, &in_set ) )
                process_dns( d );
@@ -960,7 +960,7 @@ void game_loop( void )
       current_time = ( time_t ) last_time.tv_sec;
    }
    /*
-    * Save morphs so can sort later. --Shaddai 
+    * Save morphs so can sort later. --Shaddai
     */
    if( sysdata.morph_opt )
       save_morphs(  );
@@ -1081,7 +1081,7 @@ void new_descriptor( int new_desc )
    LINK( dnew, first_descriptor, last_descriptor, next, prev );
 
    /*
-    * MCCP Compression 
+    * MCCP Compression
     */
    write_to_buffer( dnew, (const char *)will_compress2_str, 0 );
 
@@ -1144,26 +1144,26 @@ void close_socket( DESCRIPTOR_DATA * dclose, bool force )
       close( dclose->ifd );
 
    /*
-    * flush outbuf 
+    * flush outbuf
     */
    if( !force && dclose->outtop > 0 )
       flush_buffer( dclose, FALSE );
 
    /*
-    * say bye to whoever's snooping this descriptor 
+    * say bye to whoever's snooping this descriptor
     */
    if( dclose->snoop_by )
       write_to_buffer( dclose->snoop_by, "Your victim has left the game.\r\n", 0 );
 
    /*
-    * stop snooping everyone else 
+    * stop snooping everyone else
     */
    for( d = first_descriptor; d; d = d->next )
       if( d->snoop_by == dclose )
          d->snoop_by = NULL;
 
    /*
-    * Check for switched people who go link-dead. -- Altrag 
+    * Check for switched people who go link-dead. -- Altrag
     */
    if( dclose->original )
    {
@@ -1181,7 +1181,7 @@ void close_socket( DESCRIPTOR_DATA * dclose, bool force )
    ch = dclose->character;
 
    /*
-    * sanity check :( 
+    * sanity check :(
     */
    if( !dclose->prev && dclose != first_descriptor )
    {
@@ -1254,7 +1254,7 @@ void close_socket( DESCRIPTOR_DATA * dclose, bool force )
       else
       {
          /*
-          * clear descriptor pointer to get rid of bug message in log 
+          * clear descriptor pointer to get rid of bug message in log
           */
          dclose->character->desc = NULL;
          free_char( dclose->character );
@@ -1264,7 +1264,7 @@ void close_socket( DESCRIPTOR_DATA * dclose, bool force )
    if( !DoNotUnlink )
    {
       /*
-       * make sure loop doesn't get messed up 
+       * make sure loop doesn't get messed up
        */
       if( d_next == dclose )
          d_next = d_next->next;
@@ -1287,13 +1287,13 @@ bool read_from_descriptor( DESCRIPTOR_DATA * d )
    int iErr;
 
    /*
-    * Hold horses if pending command already. 
+    * Hold horses if pending command already.
     */
    if( d->incomm[0] != '\0' )
       return TRUE;
 
    /*
-    * Check for overflow. 
+    * Check for overflow.
     */
    iStart = strlen( d->inbuf );
    if( iStart >= sizeof( d->inbuf ) - 10 )
@@ -1369,7 +1369,7 @@ void read_from_buffer( DESCRIPTOR_DATA * d )
          write_to_descriptor( d, "Line too long.\r\n", 0 );
 
          /*
-          * skip the rest of the line 
+          * skip the rest of the line
           */
          /*
           * for ( ; d->inbuf[i] != '\0' || i>= MAX_INBUF_SIZE ; i++ )
@@ -1529,12 +1529,12 @@ bool flush_buffer( DESCRIPTOR_DATA * d, bool fPrompt )
    if( d->snoop_by )
    {
       /*
-       * without check, 'force mortal quit' while snooped caused crash, -h 
+       * without check, 'force mortal quit' while snooped caused crash, -h
        */
       if( d->character && d->character->name )
       {
          /*
-          * Show original snooped names. -- Altrag 
+          * Show original snooped names. -- Altrag
           */
          if( d->original && d->original->name )
             snprintf( buf, MAX_INPUT_LENGTH, "%s (%s)", d->character->name, d->original->name );
@@ -1613,11 +1613,11 @@ void write_to_buffer( DESCRIPTOR_DATA * d, const char *txt, size_t length )
       if( d->outsize > 32000 )
       {
          /*
-          * empty buffer 
+          * empty buffer
           */
          d->outtop = 0;
          /*
-          * Bugfix by Samson - moved bug() call up 
+          * Bugfix by Samson - moved bug() call up
           */
          bug( "Buffer overflow. Closing (%s).", d->character ? d->character->name : "???" );
          close_socket( d, TRUE );
@@ -1811,7 +1811,7 @@ void show_title( DESCRIPTOR_DATA * d )
 void nanny_get_name( DESCRIPTOR_DATA * d, char *argument )
 {
    CHAR_DATA *ch;
-   bool fOld, chk;
+   bool fOld;
    char buf[MAX_STRING_LENGTH];
 
    ch = d->character;
@@ -1946,11 +1946,10 @@ void nanny_get_name( DESCRIPTOR_DATA * d, char *argument )
       return;
    }
 
-   chk = check_reconnect( d, argument, FALSE );
-   if( chk == BERR )
+   if( check_reconnect( d, argument, FALSE ) == BERR )
       return;
 
-   if( chk )
+   if( check_reconnect( d, argument, FALSE ) )
    {
       fOld = TRUE;
    }
@@ -2018,7 +2017,7 @@ void nanny_get_old_password( DESCRIPTOR_DATA * d, char *argument )
 {
    CHAR_DATA *ch;
    char buf[MAX_STRING_LENGTH];
-   bool fOld, chk;
+   bool fOld;
 
    ch = d->character;
    write_to_buffer( d, "\r\n", 2 );
@@ -2039,15 +2038,14 @@ void nanny_get_old_password( DESCRIPTOR_DATA * d, char *argument )
    if( check_playing( d, ch->pcdata->filename, TRUE ) )
       return;
 
-   chk = check_reconnect( d, ch->pcdata->filename, TRUE );
-   if( chk == BERR )
+   if( check_reconnect( d, ch->pcdata->filename, TRUE ) == BERR )
    {
       if( d->character && d->character->desc )
          d->character->desc = NULL;
       close_socket( d, FALSE );
       return;
    }
-   if( chk == TRUE )
+   if( check_reconnect( d, ch->pcdata->filename, TRUE ) )
       return;
 
    mudstrlcpy( buf, ch->pcdata->filename, MAX_STRING_LENGTH );
@@ -2498,7 +2496,7 @@ void nanny_read_motd( DESCRIPTOR_DATA * d, const char *argument )
          ch->pcdata->learned[iLang] = 100;
 
       /*
-       * Give them their racial languages 
+       * Give them their racial languages
        */
       if( race_table[ch->race] )
       {
@@ -2783,7 +2781,7 @@ bool check_parse_name( const char *name, bool newchar )
 /*
  * Look for link-dead player to reconnect.
  */
-bool check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn )
+int check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn )
 {
    CHAR_DATA *ch;
 
@@ -2798,7 +2796,7 @@ bool check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn )
             if( d->character )
             {
                /*
-                * clear descriptor pointer to get rid of bug message in log 
+                * clear descriptor pointer to get rid of bug message in log
                 */
                d->character->desc = NULL;
                free_char( d->character );
@@ -2814,7 +2812,7 @@ bool check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn )
          else
          {
             /*
-             * clear descriptor pointer to get rid of bug message in log 
+             * clear descriptor pointer to get rid of bug message in log
              */
             d->character->desc = NULL;
             free_char( d->character );
@@ -2841,7 +2839,7 @@ bool check_reconnect( DESCRIPTOR_DATA * d, const char *name, bool fConn )
 /*
  * Check if already playing.
  */
-bool check_playing( DESCRIPTOR_DATA * d, const char *name, bool kick )
+int check_playing( DESCRIPTOR_DATA * d, const char *name, bool kick )
 {
    CHAR_DATA *ch;
    DESCRIPTOR_DATA *dold;
@@ -2867,7 +2865,7 @@ bool check_playing( DESCRIPTOR_DATA * d, const char *name, bool kick )
          write_to_buffer( dold, "Kicking off old connection... bye!\r\n", 0 );
          close_socket( dold, FALSE );
          /*
-          * clear descriptor pointer to get rid of bug message in log 
+          * clear descriptor pointer to get rid of bug message in log
           */
          d->character->desc = NULL;
          free_char( d->character );
@@ -3091,7 +3089,7 @@ char *act_string( const char *format, CHAR_DATA * to, CHAR_DATA * ch, const void
                if( !to || can_see_obj( to, obj1 ) )
                {
                   /*
-                   * Prevents act programs from triggering off note shorts 
+                   * Prevents act programs from triggering off note shorts
                    */
                   if( ( !to || IS_NPC( to ) ) && ( obj1->item_type == ITEM_PAPER ) )
                      i = obj1->pIndexData->short_descr;
@@ -3106,7 +3104,7 @@ char *act_string( const char *format, CHAR_DATA * to, CHAR_DATA * ch, const void
                if( !to || can_see_obj( to, obj2 ) )
                {
                   /*
-                   * Prevents act programs from triggering off note shorts 
+                   * Prevents act programs from triggering off note shorts
                    */
                   if( ( !to || IS_NPC( to ) ) && ( obj2->item_type == ITEM_PAPER ) )
                      i = obj2->pIndexData->short_descr;
@@ -3132,7 +3130,7 @@ char *act_string( const char *format, CHAR_DATA * to, CHAR_DATA * ch, const void
                   i = should_upper ? "It" : "it";
                }
                else
-                  i = should_upper ? 
+                  i = should_upper ?
                    !can_see( to, ch ) ? "It" : capitalize( his_her[URANGE( 0, ch->sex, 2 )] ) :
                    !can_see( to, ch ) ? "it" : his_her[URANGE( 0, ch->sex, 2 )];
                break;
@@ -3144,7 +3142,7 @@ char *act_string( const char *format, CHAR_DATA * to, CHAR_DATA * ch, const void
                   i = should_upper ? "It" : "it";
                }
                else
-                  i = should_upper ? 
+                  i = should_upper ?
                    !can_see( to, vch ) ? "It" : capitalize( his_her[URANGE( 0, vch->sex, 2 )] ) :
                    !can_see( to, vch ) ? "it" : his_her[URANGE( 0, vch->sex, 2 )];
                break;
@@ -3346,7 +3344,7 @@ void act( short AType, const char *format, CHAR_DATA * ch, const void *arg1, con
 
    /*
     * Anyone feel like telling me the point of looping through the whole
-    * room when we're only sending to one char anyways..? -- Alty 
+    * room when we're only sending to one char anyways..? -- Alty
     */
    for( ; to; to = ( type == TO_CHAR || type == TO_VICT ) ? NULL : to->next_in_room )
    {
@@ -3380,7 +3378,7 @@ void act( short AType, const char *format, CHAR_DATA * ch, const void *arg1, con
       if( MOBtrigger )
       {
          /*
-          * Note: use original string, not string with ANSI. -- Alty 
+          * Note: use original string, not string with ANSI. -- Alty
           */
          mprog_act_trigger( txt, to, ch, obj1, vch, obj2 );
       }
@@ -3573,7 +3571,7 @@ void display_prompt( DESCRIPTOR_DATA * d )
    }
 
    /*
-    * Clear out old color stuff 
+    * Clear out old color stuff
     */
    for( ; *prompt; prompt++ )
    {
