@@ -223,7 +223,7 @@ bool is_legal_kill( CHAR_DATA * ch, CHAR_DATA * vch )
    return TRUE;
 }
 
-/* 
+/*
  * Racial Skills Handling -- Kayle 7-8-07
  */
 bool check_ability( CHAR_DATA * ch, char *command, char *argument )
@@ -353,7 +353,7 @@ bool check_ability( CHAR_DATA * ch, char *command, char *argument )
                   }
 
                   /*
-                   * Too many illegal pk attempts with cuffs, swats etc lately. - Luc 
+                   * Too many illegal pk attempts with cuffs, swats etc lately. - Luc
                    */
                   if( xIS_SET( ch->act, PLR_NICE ) )
                   {
@@ -533,7 +533,7 @@ bool check_skill( CHAR_DATA * ch, char *command, char *argument )
    }
 
    /*
-    * check if mana is required 
+    * check if mana is required
     */
    if( skill_table[sn]->min_mana )
    {
@@ -685,11 +685,11 @@ bool check_skill( CHAR_DATA * ch, char *command, char *argument )
       }
 
       /*
-       * waitstate 
+       * waitstate
        */
       WAIT_STATE( ch, skill_table[sn]->beats );
       /*
-       * check for failure 
+       * check for failure
        */
       if( ( number_percent(  ) + skill_table[sn]->difficulty * 5 ) > ( IS_NPC( ch ) ? 75 : LEARNED( ch, sn ) ) )
       {
@@ -1831,7 +1831,7 @@ void do_sset( CHAR_DATA* ch, const char* argument)
       for( sn = 0; sn < num_skills; ++sn )
       {
          /*
-          * Fix by Narn to prevent ssetting skills the player shouldn't have. 
+          * Fix by Narn to prevent ssetting skills the player shouldn't have.
           */
          if( victim->level >= skill_table[sn]->skill_level[victim->Class]
              || victim->level >= skill_table[sn]->race_level[victim->race] )
@@ -2382,7 +2382,7 @@ void do_dig( CHAR_DATA* ch, const char* argument)
    ch->substate = SUB_NONE;
 
    /*
-    * not having a shovel makes it harder to succeed 
+    * not having a shovel makes it harder to succeed
     */
    shovel = FALSE;
    for( obj = ch->first_carrying; obj; obj = obj->next_content )
@@ -2393,7 +2393,7 @@ void do_dig( CHAR_DATA* ch, const char* argument)
       }
 
    /*
-    * dig out an EX_DIG exit... 
+    * dig out an EX_DIG exit...
     */
    if( arg[0] != '\0' )
    {
@@ -2401,7 +2401,7 @@ void do_dig( CHAR_DATA* ch, const char* argument)
           && IS_SET( pexit->exit_info, EX_DIG ) && IS_SET( pexit->exit_info, EX_CLOSED ) )
       {
          /*
-          * 4 times harder to dig open a passage without a shovel 
+          * 4 times harder to dig open a passage without a shovel
           */
          if( can_use_skill( ch, ( number_percent(  ) * ( shovel ? 1 : 4 ) ), gsn_dig ) )
          {
@@ -2433,7 +2433,7 @@ void do_dig( CHAR_DATA* ch, const char* argument)
    for( obj = startobj; obj; obj = obj->next_content )
    {
       /*
-       * twice as hard to find something without a shovel 
+       * twice as hard to find something without a shovel
        */
       if( IS_OBJ_STAT( obj, ITEM_BURIED ) && ( can_use_skill( ch, ( number_percent(  ) * ( shovel ? 1 : 2 ) ), gsn_dig ) ) )
 /*
@@ -2636,7 +2636,7 @@ void do_steal( CHAR_DATA* ch, const char* argument)
       return;
    }
 
-/* Disabled stealing among players because of complaints naked avatars were 
+/* Disabled stealing among players because of complaints naked avatars were
    running around stealing eq from equipped pkillers. -- Narn
 */
 /*    if ( check_illegal_psteal( ch, victim ) )
@@ -2664,9 +2664,9 @@ void do_steal( CHAR_DATA* ch, const char* argument)
       - ( get_curr_lck( ch ) - 15 ) + ( get_curr_lck( victim ) - 13 );
 
    /*
-    * Changed the level check, made it 10 levels instead of five and made the 
-    * victim not attack in the case of a too high level difference.  This is 
-    * to allow mobprogs where the mob steals eq without having to put level 
+    * Changed the level check, made it 10 levels instead of five and made the
+    * victim not attack in the case of a too high level difference.  This is
+    * to allow mobprogs where the mob steals eq without having to put level
     * checks into the progs.  Also gave the mobs a 10% chance of failure.
     */
    if( ch->level + 10 < victim->level )
@@ -2698,7 +2698,7 @@ void do_steal( CHAR_DATA* ch, const char* argument)
          else
          {
             /*
-             * log_string( buf ); 
+             * log_string( buf );
              */
             if( IS_NPC( ch ) )
             {
@@ -2915,7 +2915,7 @@ void do_backstab( CHAR_DATA* ch, const char* argument)
    }
 
    /*
-    * Added stabbing weapon. -Narn 
+    * Added stabbing weapon. -Narn
     */
    if( ( obj = get_eq_char( ch, WEAR_WIELD ) ) == NULL || ( obj->value[3] != 11 && obj->value[3] != 2 ) )
    {
@@ -2930,7 +2930,7 @@ void do_backstab( CHAR_DATA* ch, const char* argument)
    }
 
    /*
-    * Can backstab a char even if it's hurt as long as it's sleeping. -Narn 
+    * Can backstab a char even if it's hurt as long as it's sleeping. -Narn
     */
    if( victim->hit < victim->max_hit && IS_AWAKE( victim ) )
    {
@@ -3519,7 +3519,7 @@ void do_bash( CHAR_DATA* ch, const char* argument)
    {
       learn_from_success( ch, gsn_bash );
       /*
-       * do not change anything here!  -Thoric 
+       * do not change anything here!  -Thoric
        */
       WAIT_STATE( victim, 2 * PULSE_VIOLENCE );
       victim->position = POS_SITTING;
@@ -3576,7 +3576,7 @@ void do_stun( CHAR_DATA* ch, const char* argument)
    schance = ( ( ( get_curr_dex( victim ) + get_curr_str( victim ) )
                  - ( get_curr_dex( ch ) + get_curr_str( ch ) ) ) * 10 ) + 10;
    /*
-    * harder for player to stun another player 
+    * harder for player to stun another player
     */
    if( !IS_NPC( ch ) && !IS_NPC( victim ) )
       schance += sysdata.stun_plr_vs_plr;
@@ -3586,7 +3586,7 @@ void do_stun( CHAR_DATA* ch, const char* argument)
    {
       learn_from_success( ch, gsn_stun );
       /*
-       * DO *NOT* CHANGE!    -Thoric    
+       * DO *NOT* CHANGE!    -Thoric
        */
       if( !IS_NPC( ch ) )
          ch->move -= ch->max_move / 10;
@@ -4009,7 +4009,7 @@ void do_mistwalk( CHAR_DATA* ch, const char* argument)
    }
 
    /*
-    * Subtract 22 extra bp for mist walk from 0500 to 2100 SB 
+    * Subtract 22 extra bp for mist walk from 0500 to 2100 SB
     */
    if( time_info.hour < 21 && time_info.hour > 5 && !IS_NPC( ch ) )
       gain_condition( ch, COND_BLOODTHIRST, -22 );
@@ -4110,7 +4110,7 @@ void do_pick( CHAR_DATA* ch, const char* argument)
    WAIT_STATE( ch, skill_table[gsn_pick_lock]->beats );
 
    /*
-    * look for guards 
+    * look for guards
     */
    for( gch = ch->in_room->first_person; gch; gch = gch->next_in_room )
    {
@@ -4137,12 +4137,12 @@ void do_pick( CHAR_DATA* ch, const char* argument)
    if( ( pexit = find_door( ch, arg, TRUE ) ) != NULL )
    {
       /*
-       * 'pick door' 
+       * 'pick door'
        */
       /*
-       * ROOM_INDEX_DATA *to_room; 
+       * ROOM_INDEX_DATA *to_room;
        *//*
-       * Unused 
+       * Unused
        */
       EXIT_DATA *pexit_rev;
 
@@ -4175,7 +4175,7 @@ void do_pick( CHAR_DATA* ch, const char* argument)
       learn_from_success( ch, gsn_pick_lock );
       adjust_favor( ch, 9, 1 );
       /*
-       * pick the other side 
+       * pick the other side
        */
       if( ( pexit_rev = pexit->rexit ) != NULL && pexit_rev->to_room == ch->in_room )
       {
@@ -4188,7 +4188,7 @@ void do_pick( CHAR_DATA* ch, const char* argument)
    if( ( obj = get_obj_here( ch, arg ) ) != NULL )
    {
       /*
-       * 'pick object' 
+       * 'pick object'
        */
       if( obj->item_type != ITEM_CONTAINER )
       {
@@ -4325,7 +4325,7 @@ void do_recall( CHAR_DATA* ch, const char* argument)
       location = get_room_index( ROOM_VNUM_DEADLY );
 
    /*
-    * 1998-01-02, h 
+    * 1998-01-02, h
     */
    if( !location && !IS_NPC( ch ) ) /* Obscure crash bug */
       location = get_room_index( race_table[ch->race]->race_recall );
@@ -4589,7 +4589,7 @@ bool check_parry( CHAR_DATA * ch, CHAR_DATA * victim )
    if( IS_NPC( victim ) )
    {
       /*
-       * Tuan was here.  :) 
+       * Tuan was here.  :)
        */
       chances = UMIN( 60, 2 * victim->level );
    }
@@ -4602,7 +4602,7 @@ bool check_parry( CHAR_DATA * ch, CHAR_DATA * victim )
 
    /*
     * Put in the call to chance() to allow penalties for misaligned
-    * clannies.  
+    * clannies.
     */
    if( chances != 0 && victim->morph )
       chances += victim->morph->parry;
@@ -4646,7 +4646,7 @@ bool check_dodge( CHAR_DATA * ch, CHAR_DATA * victim )
       chances += victim->morph->dodge;
 
    /*
-    * Consider luck as a factor 
+    * Consider luck as a factor
     */
    if( !chance( victim, chances + victim->level - ch->level ) )
    {
@@ -4671,7 +4671,7 @@ bool check_tumble( CHAR_DATA * ch, CHAR_DATA * victim )
 
    if( victim->Class != CLASS_THIEF || !IS_AWAKE( victim ) )
       return FALSE;
-   if( !IS_NPC( victim ) && !victim->pcdata->learned[gsn_tumble] > 0 )
+   if( !IS_NPC( victim ) && !( victim->pcdata->learned[gsn_tumble] > 0 ) )
       return FALSE;
    if( IS_PKILL( victim ) )
       mod_tumble_by = sysdata.tumble_pk;
@@ -4743,7 +4743,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
       return;
    }
    /*
-    * Now we have a valid weapon...check to see if we have the powder. 
+    * Now we have a valid weapon...check to see if we have the powder.
     */
    for( pobj = ch->first_carrying; pobj; pobj = pobj->next_content )
    {
@@ -4756,7 +4756,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
       return;
    }
    /*
-    * Okay, we have the powder...do we have water? 
+    * Okay, we have the powder...do we have water?
     */
    for( wobj = ch->first_carrying; wobj; wobj = wobj->next_content )
    {
@@ -4769,7 +4769,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
       return;
    }
    /*
-    * Great, we have the ingredients...but is the thief smart enough? 
+    * Great, we have the ingredients...but is the thief smart enough?
     */
    if( !IS_NPC( ch ) && get_curr_wis( ch ) < 16 )
    {
@@ -4777,7 +4777,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
       return;
    }
    /*
-    * And does the thief have steady enough hands? 
+    * And does the thief have steady enough hands?
     */
    if( !IS_NPC( ch ) && ( ( get_curr_dex( ch ) < 17 ) || ch->pcdata->condition[COND_DRUNK] > 0 ) )
    {
@@ -4789,7 +4789,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
    percent = ( number_percent(  ) - get_curr_lck( ch ) - 14 );
 
    /*
-    * Check the skill percentage 
+    * Check the skill percentage
     */
    separate_obj( pobj );
    separate_obj( wobj );
@@ -4807,7 +4807,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
    }
    separate_obj( obj );
    /*
-    * Well, I'm tired of waiting.  Are you? 
+    * Well, I'm tired of waiting.  Are you?
     */
    act( AT_RED, "You mix $p in $P, creating a deadly poison!", ch, pobj, wobj, TO_CHAR );
    act( AT_RED, "$n mixes $p in $P, creating a deadly poison!", ch, pobj, wobj, TO_ROOM );
@@ -4816,7 +4816,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
    xSET_BIT( obj->extra_flags, ITEM_POISONED );
    obj->cost *= 2;
    /*
-    * Set an object timer.  Don't want proliferation of poisoned weapons 
+    * Set an object timer.  Don't want proliferation of poisoned weapons
     */
    obj->timer = UMIN( obj->level, ch->level );
 
@@ -4827,7 +4827,7 @@ void do_poison_weapon( CHAR_DATA* ch, const char* argument)
       obj->timer *= 2;
 
    /*
-    * WHAT?  All of that, just for that one bit?  How lame. ;) 
+    * WHAT?  All of that, just for that one bit?  How lame. ;)
     */
    act( AT_BLUE, "The remainder of the poison eats through $p.", ch, wobj, NULL, TO_CHAR );
    act( AT_BLUE, "The remainder of the poison eats through $p.", ch, wobj, NULL, TO_ROOM );
@@ -5094,7 +5094,7 @@ bool check_grip( CHAR_DATA * ch, CHAR_DATA * victim )
       schance = ( int )( LEARNED( victim, gsn_grip ) / 2 );
 
    /*
-    * Consider luck as a factor 
+    * Consider luck as a factor
     */
    schance += ( 2 * ( get_curr_lck( victim ) - 13 ) );
 
@@ -5226,12 +5226,12 @@ void do_berserk( CHAR_DATA* ch, const char* argument)
    /*
     * Hmmm.. 10-20 combat rounds at level 50.. good enough for most mobs,
     * and if not they can always go berserk again.. shrug.. maybe even
-    * too high. -- Altrag 
+    * too high. -- Altrag
     */
    af.duration = number_range( ch->level / 5, ch->level * 2 / 5 );
    /*
     * Hmm.. you get stronger when yer really enraged.. mind over matter
-    * type thing.. 
+    * type thing..
     */
    af.location = APPLY_STR;
    af.modifier = 1;
@@ -5280,7 +5280,7 @@ void do_hitall( CHAR_DATA* ch, const char* argument)
       else
          global_retcode = damage( ch, vch, 0, TYPE_UNDEFINED );
       /*
-       * Fireshield, etc. could kill ch too.. :>.. -- Altrag 
+       * Fireshield, etc. could kill ch too.. :>.. -- Altrag
        */
       if( global_retcode == rCHAR_DIED || global_retcode == rBOTH_DIED || char_died( ch ) )
          return;
@@ -5589,7 +5589,7 @@ ch_ret ranged_got_target( CHAR_DATA * ch, CHAR_DATA * victim, OBJ_DATA * weapon,
    if( xIS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
    {
       /*
-       * safe room, bubye projectile 
+       * safe room, bubye projectile
        */
       if( projectile )
       {
@@ -5619,7 +5619,7 @@ ch_ret ranged_got_target( CHAR_DATA * ch, CHAR_DATA * victim, OBJ_DATA * weapon,
          learn_from_failure( ch, gsn_missile_weapons );
 
          /*
-          * 50% chance of projectile getting lost 
+          * 50% chance of projectile getting lost
           */
          if( number_percent(  ) < 50 )
             extract_obj( projectile );
@@ -5650,7 +5650,7 @@ ch_ret ranged_got_target( CHAR_DATA * ch, CHAR_DATA * victim, OBJ_DATA * weapon,
       if( projectile )
       {
          /*
-          * 50% chance of getting lost 
+          * 50% chance of getting lost
           */
          if( number_percent(  ) < 50 )
             extract_obj( projectile );
@@ -5703,7 +5703,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
    victim = NULL;
 
    /*
-    * get an exit or a victim 
+    * get an exit or a victim
     */
    if( ( pexit = find_door( ch, arg, TRUE ) ) == NULL )
    {
@@ -5720,7 +5720,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
             return rNONE;
          }
          /*
-          * Taken out because of waitstate 
+          * Taken out because of waitstate
           * if ( !IS_NPC(ch) && !IS_NPC(victim) )
           * {
           * send_to_char("Pkill like a real pkiller.\r\n", ch );
@@ -5733,7 +5733,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
       dir = pexit->vdir;
 
    /*
-    * check for ranged attacks from private rooms, etc 
+    * check for ranged attacks from private rooms, etc
     */
    if( !victim )
    {
@@ -5765,7 +5765,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
    }
 
    /*
-    * Check for obstruction 
+    * Check for obstruction
     */
    if( pexit && IS_SET( pexit->exit_info, EX_CLOSED ) )
    {
@@ -5793,7 +5793,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
        * }
        */
       /*
-       * don't allow attacks on mobs that are in a no-missile room --Shaddai 
+       * don't allow attacks on mobs that are in a no-missile room --Shaddai
        */
       if( xIS_SET( vch->in_room->room_flags, ROOM_NOMISSILE ) )
       {
@@ -5810,7 +5810,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
        */
 
       /*
-       * can't properly target someone heavily in battle 
+       * can't properly target someone heavily in battle
        */
       if( vch->num_fighting > MAX_FIGHT )
       {
@@ -5870,7 +5870,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
       else
          stxt = skill->name;
       /*
-       * a plain "spell" flying around seems boring 
+       * a plain "spell" flying around seems boring
        */
       if( !str_cmp( stxt, "spell" ) )
          stxt = "magical burst of energy";
@@ -5897,7 +5897,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
    }
 
    /*
-    * victim in same room 
+    * victim in same room
     */
    if( victim )
    {
@@ -5907,12 +5907,12 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
    }
 
    /*
-    * assign scanned victim 
+    * assign scanned victim
     */
    victim = vch;
 
    /*
-    * reverse direction text from move_char 
+    * reverse direction text from move_char
     */
    dtxt = rev_exit( pexit->vdir );
 
@@ -5924,7 +5924,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
       if( IS_SET( pexit->exit_info, EX_CLOSED ) )
       {
          /*
-          * whadoyahknow, the door's closed 
+          * whadoyahknow, the door's closed
           */
          if( projectile )
             snprintf( buf, MAX_STRING_LENGTH, "You see your %s pierce a door in the distance to the %s.",
@@ -5949,7 +5949,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
       }
 
       /*
-       * no victim? pick a random one 
+       * no victim? pick a random one
        */
       if( !victim )
       {
@@ -5970,7 +5970,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
       }
 
       /*
-       * In the same room as our victim? 
+       * In the same room as our victim?
        */
       if( victim && ch->in_room == victim->in_room )
       {
@@ -5980,7 +5980,7 @@ ch_ret ranged_attack( CHAR_DATA * ch, const char *argument, OBJ_DATA * weapon, O
             act( color, "$t flies in from $T.", ch, aoran( stxt ), dtxt, TO_ROOM );
 
          /*
-          * get back before the action starts 
+          * get back before the action starts
           */
          char_from_room( ch );
          char_to_room( ch, was_in_room );
@@ -6085,7 +6085,7 @@ void do_fire( CHAR_DATA* ch, const char* argument)
    }
 
    /*
-    * modify maximum distance based on bow-type and ch's class/str/etc 
+    * modify maximum distance based on bow-type and ch's class/str/etc
     */
    max_dist = URANGE( 1, bow->value[4], 10 );
 
@@ -6116,12 +6116,12 @@ void do_fire( CHAR_DATA* ch, const char* argument)
    }
 
    /*
-    * Add wait state to fire for pkill, etc... 
+    * Add wait state to fire for pkill, etc...
     */
    WAIT_STATE( ch, 6 );
 
    /*
-    * handle the ranged attack 
+    * handle the ranged attack
     */
    ranged_attack( ch, argument, bow, arrow, TYPE_HIT + arrow->value[3], max_dist );
 
@@ -6149,7 +6149,7 @@ bool mob_fire( CHAR_DATA * ch, const char *name )
       return FALSE;
 
    /*
-    * modify maximum distance based on bow-type and ch's class/str/etc 
+    * modify maximum distance based on bow-type and ch's class/str/etc
     */
    max_dist = URANGE( 1, bow->value[4], 10 );
 
@@ -6161,9 +6161,9 @@ bool mob_fire( CHAR_DATA * ch, const char *name )
    return TRUE;
 }
 
-/* -- working on -- 
+/* -- working on --
  * Syntaxes: throw object  (assumed already fighting)
- *	     throw object direction target  (all needed args for distance 
+ *	     throw object direction target  (all needed args for distance
  *	          throwing)
  *	     throw object  (assumed same room throw)
 
@@ -6188,7 +6188,7 @@ void do_throw( CHAR_DATA* ch, const char* argument)
 	throw_obj = throw_obj=>prev_content )
   {
 ---    if ( can_see_obj( ch, throw_obj )
-	&& ( throw_obj->wear_loc == WEAR_HELD || throw_obj->wear_loc == 
+	&& ( throw_obj->wear_loc == WEAR_HELD || throw_obj->wear_loc ==
 	WEAR_WIELDED || throw_obj->wear_loc == WEAR_DUAL_WIELDED )
 	&& nifty_is_name( arg, throw_obj->name ) )
       break;
@@ -6226,7 +6226,7 @@ void do_throw( CHAR_DATA* ch, const char* argument)
       if ( ( ( victim = get_char_room( ch, arg1 ) ) == NULL )
   	&& ( arg2[0] == '\0' ) )
       {
-        act( AT_GREY, "Throw $t at whom?", ch, obj->short_descr, NULL,  
+        act( AT_GREY, "Throw $t at whom?", ch, obj->short_descr, NULL,
 	  TO_CHAR );
         return;
       }
@@ -6324,7 +6324,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
    return;
 }
 
-/*------------------------------------------------------------ 
+/*------------------------------------------------------------
  *  Fighting Styles - haus
  */ void do_style( CHAR_DATA * ch, const char *argument )
 {
@@ -6357,7 +6357,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       if( number_percent(  ) < LEARNED( ch, gsn_style_evasive ) )
       {
          /*
-          * success 
+          * success
           */
          if( ch->fighting )
          {
@@ -6373,7 +6373,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       else
       {
          /*
-          * failure 
+          * failure
           */
          send_to_char( "You nearly trip in a lame attempt to adopt an evasive fighting style.\r\n", ch );
          return;
@@ -6390,7 +6390,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       if( number_percent(  ) < LEARNED( ch, gsn_style_defensive ) )
       {
          /*
-          * success 
+          * success
           */
          if( ch->fighting )
          {
@@ -6406,7 +6406,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       else
       {
          /*
-          * failure 
+          * failure
           */
          send_to_char( "You nearly trip in a lame attempt to adopt a defensive fighting style.\r\n", ch );
          return;
@@ -6423,7 +6423,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       if( number_percent(  ) < LEARNED( ch, gsn_style_standard ) )
       {
          /*
-          * success 
+          * success
           */
          if( ch->fighting )
          {
@@ -6439,7 +6439,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       else
       {
          /*
-          * failure 
+          * failure
           */
          send_to_char( "You nearly trip in a lame attempt to adopt a standard fighting style.\r\n", ch );
          return;
@@ -6456,7 +6456,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       if( number_percent(  ) < LEARNED( ch, gsn_style_aggressive ) )
       {
          /*
-          * success 
+          * success
           */
          if( ch->fighting )
          {
@@ -6472,7 +6472,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       else
       {
          /*
-          * failure 
+          * failure
           */
          send_to_char( "You nearly trip in a lame attempt to adopt an aggressive fighting style.\r\n", ch );
          return;
@@ -6489,7 +6489,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       if( number_percent(  ) < LEARNED( ch, gsn_style_berserk ) )
       {
          /*
-          * success 
+          * success
           */
          if( ch->fighting )
          {
@@ -6505,7 +6505,7 @@ void do_slice( CHAR_DATA* ch, const char* argument)
       else
       {
          /*
-          * failure 
+          * failure
           */
          send_to_char( "You nearly trip in a lame attempt to adopt a berserk fighting style.\r\n", ch );
          return;
